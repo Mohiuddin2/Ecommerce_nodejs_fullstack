@@ -173,6 +173,8 @@ router.get("/removeAll/:id", async function (req, res, next) {
     } else if (req.session.cart) {
       cart = await new Cart(req.session.cart);
     }
+
+    console.log("Cart :", cart)
     //fnd the item with productId
     let itemIndex = cart.items.findIndex((p) => p.productId == productId);
     if (itemIndex > -1) {
@@ -205,8 +207,8 @@ router.get("/checkout", middleware.isLoggedIn, async (req, res) => {
   if (!req.session.cart) {
     return res.redirect("/shopping-cart");
   }
-  //load the cart with the session's cart's id from the db
-  cart = await Cart.findById(req.session.cart._id);
+  //load the cart with the session's cart's id from the db 
+  let cart = await Cart.findById(req.session.cart._id); 
 
   const errMsg = req.flash("error")[0];
   res.render("shop/checkout", {
@@ -222,7 +224,13 @@ router.post("/checkout", middleware.isLoggedIn, async (req, res) => {
   if (!req.session.cart) {
     return res.redirect("/shopping-cart");
   }
+  
+  // console.log("from stripe checkout :", res.session)
+  // console.log("from stripe cart :", res.session.cart)
+
   const cart = await Cart.findById(req.session.cart._id);
+
+  console.log("from stripe", cart)
   stripe.charges.create(
     {
       amount: cart.totalCost * 100,

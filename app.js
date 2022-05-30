@@ -23,25 +23,33 @@ app.set("view engine", "ejs");
 
 // admin route
 const adminRouter = require("./routes/admin");
-app.use("/admin", adminRouter);
 
 app.use(logger("dev"));
+
+app.use("/admin", adminRouter );
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: false, //false was
+    saveUninitialized: true, // false was
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
     }),
     //session expires after 3 hours
-    cookie: { maxAge: 60 * 1000 * 60 * 3 },
+    cookie: { maxAge: 60 * 1000 * 60 * 3 }, 
+    
   })
 );
+
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());

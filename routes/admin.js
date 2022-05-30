@@ -10,8 +10,8 @@ AdminBro.registerAdapter(AdminBroMongoose);
 
 const express = require("express");
 const app = express();
-
-const adminBro = new AdminBro({
+   
+const adminBro = new AdminBro({  
   databases: [mongoose],
   rootPath: "/admin",
   branding: {
@@ -168,6 +168,7 @@ const ADMIN = {
 };
 
 const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
+ 
   authenticate: async (email, password) => {
     if (ADMIN.password === password && ADMIN.email === email) {
       return ADMIN;
